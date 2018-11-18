@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>GAME</title>
+    <link href="https://fonts.googleapis.com/css?family=Chakra+Petch" rel="stylesheet">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="header">
+        <span class="header__refresh">
+            <img src="images/refresh.svg" alt="Refresh">
+        </span>
+        <h2 class="header__score">SCORE: 0</h2>
+        <span class="header__heart">
+            <img class="animated infinite" src="images/heart.svg" alt="1">
+            <img class="animated infinite" src="images/heart.svg" alt="2">
+            <img class="animated infinite" src="images/heart.svg" alt="3">
+        </span>
+    </header>
+    <div class="game-view" id="gameContainer">
+        <div class="game-view__container">
+            -            
+        </div>
+    </div>
+    <div class="score-board" style="display: none">
+        <h3>Oyun Bitti</h3>
+        <h2 class="score-board__score">Score: 22</h2>
+        <span onclick="init()">Tekrar Oyna</span>
+    </div>
+
+    <script src="https://turbo.github.io/js/turbo.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
