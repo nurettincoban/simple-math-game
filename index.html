@@ -8,9 +8,11 @@
     <link href="https://fonts.googleapis.com/css?family=Chakra+Petch" rel="stylesheet">
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/animate.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/confeti.css">
+    <link rel="stylesheet" href="css/style.css?v=1.4">
 </head>
 <body>
+
     <header class="header">
         <span class="header__refresh">
             <img src="images/refresh.svg" alt="Refresh">
@@ -27,15 +29,36 @@
             -            
         </div>
     </div>
+    <div class="main-screen" style="z-index: 1000">
+        <h2>Hızlı Matematik</h2>
+        <br/>
+        <span onclick="init()">OYUNA BAŞLA</span>
+        <br/>
+        <div>
+            <p><strong>HAZIRLAYANLAR</strong></p>
+            <p>Nurettin Çoban</p>
+            <p>Gizem Akşanlı</p>
+            <p>Nur Sena Temiz</p>
+            <p>Emin Alagöz</p>
+        </div>
+    </div>
     <div class="score-board" style="display: none">
         <h3>Oyun Bitti</h3>
         <h2 class="score-board__score">Score: 22</h2>
+        <h4>Hatalı Cevapladıklarınız</h4>
+        <div class="score_board__wrongs">
+            -
+        </div>
         <span onclick="init()">Tekrar Oyna</span>
     </div>
+    <div class="level-board" style="display: none">
+        <div class="js-container container"></div>
+        <h3>Tebrikler! <br/> <strong class="level-board__count">1</strong>. Seviyeye Geçtiniz.</h3>
+        <h4>Hızlanıyoruz...</h4>
+        <span class="level-board__timer">-</span>
+    </div>
 
-    <script src="https://turbo.github.io/js/turbo.js"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.js"></script>
-    <script src="js/app.js"></script>
+    <script src="js/test.js"></script>
+    <script src="js/app.js?v=1.4"></script>
 </body>
 </html>

@@ -59,6 +59,7 @@ header img{
     color: #FFF;
     h3{
         font-size: 36px;
+        line-height: 0;
     }
     h2{
         font-size: 42px;
@@ -69,6 +70,9 @@ header img{
         border-radius: 50px;
         color: #111;
         font-size:22px;
+    }
+    p{
+        font-size: 28px;
     }
 }
 
@@ -89,4 +93,71 @@ header img{
 .red{
     background: #F00 !important;
     color: #FFF;
+}
+
+.yellow{
+    background: #e8dd14 !important;
+    color: #111;
+}
+
+.level-board{
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #1ce0c0;
+    z-index: 2;
+    left: 0;
+    top:0;
+    right: 0;
+    bottom:0;
+    color: #FFF;
+    h4{
+        font-size: 32px;
+    }
+    h3{
+        font-size: 38px;
+        margin: 20px;
+        text-align: center;
+    }
+    span{
+        background: #ffffff;
+        width: 92px;
+        width: 92px;
+        line-height: 92px;
+        text-align: center;
+        border-radius: 50px;
+        color: #111;
+        font-size:58px;
+    }
+}
+
+.main-screen{
+    text-align: center;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #537ece;
+    z-index: 2;
+    left: 0;
+    top:0;
+    right: 0;
+    bottom:0;
+    color: #FFF;
+    h2{
+        font-size: 42px;
+    }
+    span{
+        background: #ffffff;
+        padding: 17px 30px;
+        border-radius: 50px;
+        color: #111;
+        font-size:22px;
+    }
+    p{
+        font-size: 24px;
+    }
 }

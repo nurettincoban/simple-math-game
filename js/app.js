@@ -1,30 +1,3 @@
-
-/*var intervall;
-function init(){
-    var transformValue = 0;
-    intervall = setInterval(function(){
-        transformValue+=0.5;
-        gameContainer.style.transform = "translateY("+transformValue+"px)"; //(Number.parseInt(getComputedStyle(gameContainer).bottom) - 1) + "px"; 
-        /* gameContainer.innerHTML += `<div class="question-box">
-                                        <div class="question-box__answer">21+21 = 42</div>
-                                        <div class="question-box__answer">21+21 = 22</div>
-                                        <div class="question-box__answer">21+21 = 32</div>
-                                    </div>`; /
-        if(transformValue >= window.innerHeight - 60){
-            
-        }
-    },10);
-
-}*/
-
-/*
-    CreateGameLevel
-    Create Animation
-    Create Questions
-    Create Elemenets
-    Check Answer
-*/
-
 const gameContainer = document.getElementById("gameContainer");
 
 let gameLevel=1; // Use for speed
@@ -32,37 +5,40 @@ let failCount;
 let score;
 let transformValue;
 let questions = [];
+let wrongAnswers = [];
 let interval;
 const questionCount = 5;
 
 function init(){
-    if(interval){
-        clearInterval(interval);
-    }
-    gameLevel = 1;
-    failCount = 0;
-    score = 0;
-    transformValue=0;
-    questions = [];
-    document.querySelector(".score-board").style.display = 'none';
-    createLevel();
-    createAnimation();
-    updateScore();
-    document.querySelector(".header__heart").innerHTML = `<img class="animated infinite" src="images/heart.svg" alt="1">
-    <img class="animated infinite" src="images/heart.svg" alt="2">
-    <img class="animated infinite" src="images/heart.svg" alt="3">`;
+        if(interval){
+            clearInterval(interval);
+        }
+        gameLevel = 1;
+        failCount = 0;
+        score = 0;
+        transformValue=0;
+        questions = [];
+        wrongAnswers = [];
+        document.querySelector(".main-screen").style.display = 'none';
+        document.querySelector(".score-board").style.display = 'none';
+        createLevel();
+        createAnimation();
+        updateScore();
+        document.querySelector(".header__heart").innerHTML = `<img class="animated infinite" src="images/heart.svg" alt="1">
+        <img class="animated infinite" src="images/heart.svg" alt="2">
+        <img class="animated infinite" src="images/heart.svg" alt="3">`;
 }
-init();
 
 function createAnimation(){
     var transformValue = 0;
     interval = setInterval(function(){
-        transformValue+=0.5;
-        gameContainer.style.transform = "translateY("+transformValue+"px)"; //(Number.parseInt(getComputedStyle(gameContainer).bottom) - 1) + "px"; 
+        for(let i=0;i<(gameLevel+1);i++){
+            transformValue+=0.15;
+            gameContainer.style.transform = "translateY("+transformValue+"px)"; //(Number.parseInt(getComputedStyle(gameContainer).bottom) - 1) + "px"; 
+        }
         if(transformValue >= window.innerHeight - 60){
             var questionElements = document.querySelectorAll(".question-box");
             for(let i=questionElements.length;i>0;i--){
-                console.log(i);
                 if(!questions[i-1].isClicked){
                     if(questionElements[i-1].getBoundingClientRect().bottom >= window.innerHeight+90){
                         // Gamer Over Function
@@ -84,11 +60,11 @@ function createLevel(){
     gameContainer.innerHTML = _questionsDomObj;
 }
 
-function checkAnswer(index,option){
+function checkAnswer(index,option,index2){
     console.log(index,option);
     var _clickedQuestion = questions[index];
     if(!_clickedQuestion.isClicked){
-        var elementId = `question-option-${index}-${option}`;
+        var elementId = `question-option-${index}-${option}-${index2}`;
         console.log(elementId);
         _clickedQuestion.isClicked = true;
         if(_clickedQuestion.answer == option){
@@ -98,14 +74,56 @@ function checkAnswer(index,option){
             document.getElementById(elementId).classList.add("green");
         }else{
             failCount++;
-            if(failCount == 4)
+            wrongAnswers.push(_clickedQuestion);
+            if(failCount >= 3)
                 gameEnd();
             destroyHeart();
-            window.navigator.vibrate(400); // vibrate for 200ms
+            try{
+                window.navigator.vibrate(400); // vibrate for 200ms
+            }catch(ex){
+
+            }
             incorrectSound.play();
             document.getElementById(elementId).classList.add("red");
+            var getCorrectIndex = _clickedQuestion.options.indexOf(_clickedQuestion.answer);
+            document.getElementById(`question-option-${index}-${_clickedQuestion.answer}-${getCorrectIndex}`).classList.add("yellow");
+        }
+        if(checkLevelIsComplete() && failCount < 3){
+            clearInterval(interval);
+            nextLevel();
         }
     }
+}
+
+function checkLevelIsComplete(){
+    let _complete = true; 
+    questions.forEach(element => {
+        if(!element.isClicked){
+            _complete = false;
+        }
+    });
+    return _complete;
+}
+
+function nextLevel(){
+    gameLevel++;
+    document.querySelector(".level-board__count").innerHTML = gameLevel;
+    document.querySelector(".level-board").style.display = "flex";
+    let timer = 5;
+    document.querySelector(".level-board__timer").innerHTML = timer;
+    var levelTimerInterval = setInterval(function(){
+        timer--;
+        document.querySelector(".level-board__timer").innerHTML = timer;
+        if(timer == 0){
+            clearInterval(levelTimerInterval);
+            console.log("NEXT");
+            transformValue=0;
+            questions = [];
+            createLevel();
+            createAnimation();
+            document.querySelector(".level-board").style.display = "none";
+        }
+    },1000);
 }
 
 function createLevelObject(){
@@ -114,8 +132,8 @@ function createLevelObject(){
     questions.forEach((element,index) => {
         const decideProcess = parseInt(Math.random()*3)+1;
         _questionObj += `<div class="question-box" id="question${index}">`;
-        element.options.forEach(option => {
-            _questionObj += `<div id="question-option-${index}-${option}" onclick="checkAnswer(${index},${option})" class="question-box__answer">${element.question} = ${option}</div>`;
+        element.options.forEach((option,index2) => {
+            _questionObj += `<div id="question-option-${index}-${option}-${index2}" onclick="checkAnswer(${index},${option},${index2})" class="question-box__answer">${element.question} = ${option}</div>`;
         });
         _questionObj += `</div>`;
     });
@@ -132,9 +150,9 @@ function getQuestions(){
 }
 
 function createQuestion(){
-    const firstNumber = parseInt(Math.random() * 10);
-    const secondNumber = parseInt(Math.random() * 10);
-    const decideProcess = parseInt(Math.random()*4);
+    const firstNumber = parseInt(Math.random() * (7 + (gameLevel * 2)));
+    const secondNumber = parseInt(Math.random() * (7 + (gameLevel * 2)));
+    const decideProcess = parseInt(Math.random() * 4);
     let answer;
     let questionKey;
     let options = [];
@@ -143,40 +161,38 @@ function createQuestion(){
             questionKey= "+";
             answer = firstNumber + secondNumber;
             options.push(answer);
-            options.push(firstNumber + secondNumber + parseInt(Math.random()*10) + 4);
-            options.push(firstNumber - secondNumber + parseInt(Math.random()*10) + 4);
             break;
         case 1:
             questionKey= "x";
             answer = firstNumber * secondNumber;
             options.push(answer);
-            options.push(firstNumber * secondNumber - parseInt(Math.random()*6) + 2);
-            options.push(firstNumber * secondNumber + parseInt(Math.random()*6) + 2);
             break;
         case 2:
             if(firstNumber%secondNumber == 0){
                 questionKey= "/";
-                answer = firstNumber / secondNumber;
+                answer = parseInt(firstNumber / secondNumber);
                 options.push(answer);
-                options.push((firstNumber / secondNumber - parseInt(Math.random()*6) + 2).toFixed(2));
-                options.push((firstNumber / secondNumber + parseInt(Math.random()*6) + 2).toFixed(2));
             }
             else{
                 questionKey= "+";
                 answer = firstNumber + secondNumber;
                 options.push(answer);
-                options.push(firstNumber + secondNumber + parseInt(Math.random()*10) + 4);
-                options.push(firstNumber - secondNumber + parseInt(Math.random()*10) + 4);
             }
             break;
         case 3:
             questionKey= "-";
             answer = firstNumber - secondNumber;
             options.push(answer);
-            options.push(firstNumber + secondNumber + parseInt(Math.random()*10) + 4);
-            options.push(firstNumber - secondNumber + parseInt(Math.random()*10) + 4);
             break;
     }
+    let randomOpts = [];
+    randomOpts.push(answer + parseInt(Math.random()*10 + 1));
+    randomOpts.push(answer - parseInt(Math.random()*10 + 1));
+    randomOpts.push(answer - parseInt(Math.random()*10 + 1));
+    randomOpts.push(answer + parseInt(Math.random()*10 + 1));
+    randomOpts = shuffle(randomOpts);
+    options.push(randomOpts[0]);
+    options.push(randomOpts[1]);
     shuffle(options);
     return {
         question: firstNumber + questionKey + secondNumber,
@@ -220,12 +236,18 @@ function destroyHeart() {
     var element = hearts[0].classList.add("swing");
     setTimeout(function(){
         hearts[0].remove();
-    },1500);
+    },500);
 }
 
 function gameEnd(){
     document.querySelector(".score-board__score").innerHTML = "SCORE: "+score;
+    document.querySelector(".score_board__wrongs").innerHTML = "";
+    console.log(wrongAnswers);
+    wrongAnswers.forEach(function(ans){
+        document.querySelector(".score_board__wrongs").innerHTML += `<p>${ans.question}=${ans.answer}</p>`;
+    });
     init();
+    clearInterval(interval);
     document.querySelector(".score-board").style.display = 'flex';
 }
 
